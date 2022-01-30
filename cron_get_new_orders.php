@@ -35,7 +35,7 @@ file_put_contents("./cfg.php",$piece);
 $files = scandir('./syncProducts');
 $max_files=10;
 foreach($files as $file) {
-  if($file != "." AND $file != "..")
+  if($file != "." AND $file != ".." AND $file != ".gitignore")
    {
      $p=file_get_contents("./syncProducts/".$file);
      $p=unserialize($p);
@@ -48,7 +48,6 @@ foreach($files as $file) {
          unlink("./syncProducts/".$file);
        }
        $max_files--;
-      sleep(1);
       if($max_files==0) break;
    }
  }

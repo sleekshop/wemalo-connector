@@ -47,14 +47,19 @@ class wemaloCtl
    }
 
 
-  public static function CreateProduct($args=array())
-  {
-    $endpoint="https://connect.wemalo.com/v1/product/add";
-    $method="POST";
-    $res=self::sendReq($endpoint,$method,WEMALO_TOKEN,$args);
-    sleep(1);
-    return($res);
-  }
+   public static function CreateProduct($args=array())
+   {
+     $endpoint="https://connect.wemalo.com/v1/product/add";
+     $method="POST";
+     $final_args=array();
+     foreach($args as $key=>$value)
+      {
+        $final_args[$key]=str_replace('"',"'",$value);
+      }
+     $res=self::sendReq($endpoint,$method,WEMALO_TOKEN,$final_args);
+     sleep(1);
+     return($res);
+   }
 
 
   private static function CreateCartProducts($cart=array())
