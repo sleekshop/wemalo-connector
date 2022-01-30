@@ -33,7 +33,7 @@ $piece=json_encode($piece);
 file_put_contents("./cfg.php",$piece);
 //NOW syncing products if neccessary
 $files = scandir('./syncProducts');
-$max_files=20;
+$max_files=10;
 foreach($files as $file) {
   if($file != "." AND $file != "..")
    {
