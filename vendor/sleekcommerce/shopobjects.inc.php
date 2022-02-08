@@ -84,6 +84,57 @@ private static function get_shopobject_from_json($so="")
 	return($piecearray);
 }
 
+private static function get_warehouse_entity_from_json($so="")
+{
+	$piecearray=array();
+	$piecearray["id"]=(int)$so->id;
+	$piecearray["class"]=(string)$so->class;
+	$piecearray["name"]=(string)$so->name;
+  $piecearray["element_number"]=(string)$so->metadata->element_number;
+	$piecearray["availability_quantity"]=(string)$so->availability->quantity;
+	$piecearray["availability_quantity_warning"]=(string)$so->availability->quantity_warning;
+	$piecearray["availability_label"]=self::get_availability_label($piecearray["availability_quantity"],$piecearray["availability_quantity_warning"],$piecearray["availability_allow_override"],$piecearray["availability_active"]);
+	$piecearray["creation_date"]=(string)$so->creation_date;
+	$attributes=array();
+	foreach((array)$so->attributes as $attribute)
+	{
+		$attr=array();
+		$attr["type"]=(string)$attribute->type;
+		$attr["id"]=(int)$attribute->id;
+		$attr["name"]=(string)$attribute->name;
+		$attr["label"]=(string)$attribute->label;
+		$attr["value"]=(string)$attribute->value;
+    $attr["value"]=htmlspecialchars_decode($attr["value"]);
+  	if($attr["type"]=="TXT") $attr["value"]=str_replace("\n","<br>",$attr["value"]);
+
+    //$attr["value"]=html_entity_decode($attr["value"]);
+		if((string)$attribute->type=="IMG")
+		{
+			$width=intval((string)$attribute->width);
+			$height=intval((string)$attribute->height);
+			if($height!=0){$factor=PRODUCT_IMAGE_THUMB_HEIGHT/$height;}
+			$width=intval($width*$factor);
+			$height=intval($height*$factor);
+			$attr["width"]=$width;
+			$attr["height"]=$height;
+		}
+		if((string)$attribute->type=="PRODUCTS")
+		{
+			$prods=$attribute->value;
+			$prods_array=array();
+			foreach((array)$prods as $prod)
+			{
+				$piece=self::get_shopobject_from_json($prod);
+				$prods_array[]=$piece;
+			}
+			$attr["value"]=$prods_array;
+		}
+		$attributes[(string)$attribute->name]=$attr;
+	}
+	$piecearray["attributes"]=$attributes;
+	return($piecearray);
+}
+
 
 
 private static function get_products_from_json($json="")
@@ -107,6 +158,15 @@ private static function get_contents_from_json($json="")
 	return($result);
 }
 
+private static function get_warehouse_entities_from_json($json="")
+{
+	$result=array();
+	foreach((array)$json as $so)
+	{
+     $result[(string)$so->name]=self::get_warehouse_entity_from_json($so);
+	}
+	return($result);
+}
 
 
 /*
@@ -232,6 +292,19 @@ public static function SearchProducts($constraint=array(),$left_limit,$right_lim
 	$json=$sr->search_products($constraint,$left_limit,$right_limit,$order_columns,$order_type,$lang,$needed_attributes);
 	$json=json_decode($json);
     $result["products"]=self::get_products_from_json($json->result);
+    $result["count"]=(int)$json->count;
+    return($result);
+}
+
+/*
+ * Search
+*/
+public static function SearchWarehouseEntities($constraint=array(),$left_limit,$right_limit,$order_columns=array(),$order_type="ASC",$lang=DEFAULT_LANGUAGE,$needed_attributes=array())
+{
+	$sr=new SleekShopRequest();
+	$json=$sr->search_warehouse_entities($constraint,$left_limit,$right_limit,$order_columns,$order_type,$lang,$needed_attributes);
+	$json=json_decode($json);
+    $result["warehouse_entities"]=self::get_warehouse_entities_from_json($json->result);
     $result["count"]=(int)$json->count;
     return($result);
 }

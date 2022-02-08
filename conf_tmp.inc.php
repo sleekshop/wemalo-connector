@@ -7,6 +7,7 @@
 define("SERVER","###API_ENDPOINT###");
 define("LICENCE_USERNAME","###LICENCE_USERNAME###");
 define("LICENCE_PASSWORD","###LICENCE_PASSWORD###");
+define("LICENCE_SECRET_KEY","###LICENCE_SECRET_KEY###");
 //The application - token you receive when registering the application
 define("APPLICATION_TOKEN","###APPLICATION_TOKEN###");
 //The baselink added for the products

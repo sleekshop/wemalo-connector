@@ -18,7 +18,7 @@ if($remote_session!="")
    if((string)$res->object=="error") die("PERMISSION_DENIED");
  }
 if($action=="") $action=1;
-if(SERVER=="" OR LICENCE_USERNAME=="" OR LICENCE_PASSWORD=="" OR APPLICATION_TOKEN=="") $action=2;
+if(SERVER=="" OR LICENCE_USERNAME=="" OR LICENCE_PASSWORD=="" OR APPLICATION_TOKEN=="" OR LICENCE_SECRET_KEY=="") $action=2;
 if($save==1) $action=3;
 //When application-page is called
 if($action==1)
@@ -43,6 +43,8 @@ if($action==1)
    <input type='text' name='licence_username' placeholder='Licence username' value='".LICENCE_USERNAME."'><br><br>
    Licence password<br>
    <input type='text' name='licence_password' placeholder='Licence password' value='".LICENCE_PASSWORD."'><br><br>
+   Licence secret key<br>
+   <input type='text' name='licence_secret_key' placeholder='Licence secret key' value='".LICENCE_SECRET_KEY."'><br><br>
    Application token<br>
    <input type='text' name='application_token' placeholder='Application token' value='".APPLICATION_TOKEN."'><br><br>
    <hr>
@@ -63,6 +65,8 @@ if($action==2)
    <input type='text' name='licence_username' placeholder='Licence username' value='".LICENCE_USERNAME."'><br><br>
    Licence password<br>
    <input type='text' name='licence_password' placeholder='Licence password' value='".LICENCE_PASSWORD."'><br><br>
+   Licence secret key<br>
+   <input type='text' name='licence_secret_key' placeholder='Licence secret key' value='".LICENCE_SECRET_KEY."'><br><br>
    Application token<br>
    <input type='text' name='application_token' placeholder='Application token' value='".APPLICATION_TOKEN."'><br><br>
    <hr>
@@ -79,9 +83,10 @@ if($action==2)
     $api_endpoint=$_POST["api_endpoint"];
     $licence_username=$_POST["licence_username"];
     $licence_password=$_POST["licence_password"];
+    $licence_secret_key=$_POST["licence_secret_key"];
     $application_token=$_POST["application_token"];
     $wemalo_token=$_POST["wemalo_token"];
-    ConfCtl::CreateConf($api_endpoint,$licence_username,$licence_password,$application_token,$wemalo_token);
+    ConfCtl::CreateConf($api_endpoint,$licence_username,$licence_password,$licence_secret_key,$application_token,$wemalo_token);
     echo "<h3>Welcome to the wemalo app for sleekshop / v 1.0.0 beta</h3>";
     echo "Updated the configuration, click <a href='index.php?remote_session=".$remote_session."'>here</a>";
   }
@@ -108,6 +113,11 @@ if($action==2)
         {
           file_put_contents("./syncProducts/" . $product["id"] . ".php", serialize($product));
         }
+        $res=ShopobjectsCtl::SearchWarehouseEntities($constraint,0,0);
+        foreach($res["warehouse_entities"] as $entity)
+         {
+           file_put_contents("./syncWarehouseEntities/" . $entity["id"] . ".php", serialize($entity));
+         }
         $sync=2;
      }
 
@@ -116,11 +126,11 @@ if($action==2)
      echo "<hr>";
      if($sync==2)
       {
-        echo "<h3>Products synced</h3>";
+        echo "<h3>Products and Warehouse entities synced</h3>";
       }
       else {
         echo "<form method='post' action='index.php?id_action=4&sync=1'>";
-        echo "<p>click the button to synchronize all products with your wemalo backend</p>";
+        echo "<p>click the button to synchronize all products and warehouse entities with your wemalo backend</p>";
         echo "<input type='hidden' name='remote_session' value='".$remote_session."'>";
         echo "<input type='submit' value='sync products'></form>";
       }

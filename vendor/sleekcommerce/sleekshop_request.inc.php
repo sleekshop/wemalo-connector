@@ -11,6 +11,7 @@ class SleekShopRequest
 private $server="";
 private $licence_username="";
 private $licence_password="";
+private $licence_secret_key="";
 private $post_data=array();
 
  public function __construct()
@@ -18,7 +19,8 @@ private $post_data=array();
   $this->server=SERVER;
   $this->licence_username=LICENCE_USERNAME;
   $this->licence_password=LICENCE_PASSWORD;
-  $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password);
+  $this->licence_secret_key=LICENCE_SECRET_KEY;
+  $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password,"licence_secret_key"=>$this->licence_secret_key);
  }
 
 
@@ -303,6 +305,24 @@ private $post_data=array();
     $post_data["language"]=$lang;
     return($this->snd_request($this->server,$post_data));
    }
+
+   /*
+    * This function allows us to search in the warehouse entities - data
+    */
+   public function search_warehouse_entities($constraint=array(),$left_limit=0,$right_limit=0,$order_columns=array(),$order_type="ASC",$lang=DEFAULT_LANGUAGE,$needed_attributes=array())
+    {
+     $post_data=$this->post_data;
+     $post_data["request"]="search_warehouse_entities";
+     $i=0;
+     $post_data["constraint"]=json_encode($constraint);
+     $post_data["left_limit"]=$left_limit;
+     $post_data["right_limit"]=$right_limit;
+     $post_data["order_columns"]=json_encode($order_columns);
+     $post_data["needed_attributes"]=json_encode($needed_attributes);
+     $post_data["order_type"]=$order_type;
+     $post_data["language"]=$lang;
+     return($this->snd_request($this->server,$post_data));
+    }
 
    /*
     * This function allows us to search in the content - data

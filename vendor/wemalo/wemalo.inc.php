@@ -69,7 +69,8 @@ class wemaloCtl
        if($element["id_product"]>0)
         {
         if($element["element_number"]=="") $element["element_number"]=$element["id_product"];
-         $args=array("externalId"=>$element["id_product"],"sku"=>$element["element_number"],"name"=>$element["name"],"description"=>$element["description"],"productGroup"=>"group1");
+         $args=array("externalId"=>$element["id_product"],"sku"=>$element["element_number"],"name"=>$element["name"],"description"=>$element["description"],"productGroup"=>"group1",
+         "height"=>$element["attributes"]["sys_height"],"width"=>$element["attributes"]["sys_width"],"depth"=>$element["attributes"]["sys_length"],"netWeight"=>$element["attributes"]["sys_weight"]);
          self::CreateProduct($args);
         }
      }

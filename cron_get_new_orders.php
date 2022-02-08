@@ -31,7 +31,7 @@ $timestamp=date("Y-m-d H:i:s");
 $piece=array("timestamp"=>$timestamp);
 $piece=json_encode($piece);
 file_put_contents("./cfg.php",$piece);
-//NOW syncing products if neccessary
+//NOW syncing products and warehouse entities if neccessary
 $files = scandir('./syncProducts');
 $max_files=10;
 foreach($files as $file) {
@@ -40,7 +40,8 @@ foreach($files as $file) {
      $p=file_get_contents("./syncProducts/".$file);
      $p=unserialize($p);
       if($p["element_number"]=="") $p["element_number"]=$p["id"];
-       $args=array("externalId"=>$p["id"],"sku"=>$p["element_number"],"name"=>$p["attributes"]["name"]["value"],"description"=>$p["attributes"]["short_description"]["value"],"productGroup"=>"group1");
+       $args=array("externalId"=>$p["id"],"sku"=>$p["element_number"],"name"=>$p["name"],"description"=>$p["attributes"]["short_description"]["value"],"productGroup"=>"group1",
+       "height"=>$p["metadata"]["height"],"width"=>$p["metadata"]["width"],"depth"=>$p["metadata"]["length"],"netWeight"=>$p["metadata"]["weight"]);
        $res=wemaloCtl::CreateProduct($args);
        $res=json_decode($res);
        if($res->Success)
@@ -51,6 +52,26 @@ foreach($files as $file) {
       if($max_files==0) break;
    }
  }
+ $files = scandir('./syncWarehouseEntities');
+ $max_files=10;
+ foreach($files as $file) {
+   if($file != "." AND $file != ".." AND $file != ".gitignore")
+    {
+      $p=file_get_contents("./syncWarehouseEntities/".$file);
+      $p=unserialize($p);
+       if($p["element_number"]=="") $p["element_number"]=$p["id"];
+        $args=array("externalId"=>"w".$p["id"],"sku"=>$p["element_number"],"name"=>$p["name"],"description"=>$p["attributes"]["short_description"]["value"],"productGroup"=>"group1",
+        "height"=>$p["metadata"]["height"],"width"=>$p["metadata"]["width"],"depth"=>$p["metadata"]["length"],"netWeight"=>$p["metadata"]["weight"]);
+        $res=wemaloCtl::CreateProduct($args);
+        $res=json_decode($res);
+        if($res->Success)
+        {
+          unlink("./syncWarehouseEntities/".$file);
+        }
+        $max_files--;
+       if($max_files==0) break;
+    }
+  }
 //End of syncing
 die("CRON_DONE: ". $i);
  ?>
