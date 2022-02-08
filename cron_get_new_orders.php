@@ -41,7 +41,7 @@ foreach($files as $file) {
      $p=unserialize($p);
       if($p["element_number"]=="") $p["element_number"]=$p["id"];
        $args=array("externalId"=>$p["id"],"sku"=>$p["element_number"],"name"=>$p["name"],"description"=>$p["attributes"]["short_description"]["value"],"productGroup"=>"group1",
-       "height"=>$p["metadata"]["height"],"width"=>$p["metadata"]["width"],"depth"=>$p["metadata"]["length"],"netWeight"=>$p["metadata"]["weight"]);
+       "height"=>$p["height"],"width"=>$p["width"],"depth"=>$p["length"],"netWeight"=>$p["weight"]);
        $res=wemaloCtl::CreateProduct($args);
        $res=json_decode($res);
        if($res->Success)
@@ -61,7 +61,7 @@ foreach($files as $file) {
       $p=unserialize($p);
        if($p["element_number"]=="") $p["element_number"]=$p["id"];
         $args=array("externalId"=>"w".$p["id"],"sku"=>$p["element_number"],"name"=>$p["name"],"description"=>$p["attributes"]["short_description"]["value"],"productGroup"=>"group1",
-        "height"=>$p["metadata"]["height"],"width"=>$p["metadata"]["width"],"depth"=>$p["metadata"]["length"],"netWeight"=>$p["metadata"]["weight"]);
+        "height"=>$p["height"],"width"=>$p["width"],"depth"=>$p["length"],"netWeight"=>$p["weight"]);
         $res=wemaloCtl::CreateProduct($args);
         $res=json_decode($res);
         if($res->Success)

@@ -36,6 +36,10 @@ private static function get_shopobject_from_json($so="")
 	$piecearray["availability_allow_override"]=(string)$so->availability->allow_override;
 	$piecearray["availability_active"]=(string)$so->availability->active;
 	$piecearray["availability_label"]=self::get_availability_label($piecearray["availability_quantity"],$piecearray["availability_quantity_warning"],$piecearray["availability_allow_override"],$piecearray["availability_active"]);
+  $piecearray["length"]=(float)$so->metadata->length;
+  $piecearray["width"]=(float)$so->metadata->width;
+  $piecearray["height"]=(float)$so->metadata->height;
+  $piecearray["weight"]=(float)$so->metadata->weight;
 	$piecearray["creation_date"]=(string)$so->creation_date;
 	$attributes=array();
 	foreach((array)$so->attributes as $attribute)
@@ -94,6 +98,10 @@ private static function get_warehouse_entity_from_json($so="")
 	$piecearray["availability_quantity"]=(string)$so->availability->quantity;
 	$piecearray["availability_quantity_warning"]=(string)$so->availability->quantity_warning;
 	$piecearray["availability_label"]=self::get_availability_label($piecearray["availability_quantity"],$piecearray["availability_quantity_warning"],$piecearray["availability_allow_override"],$piecearray["availability_active"]);
+  $piecearray["length"]=(float)$so->metadata->length;
+  $piecearray["width"]=(float)$so->metadata->width;
+  $piecearray["height"]=(float)$so->metadata->height;
+  $piecearray["weight"]=(float)$so->metadata->weight;
 	$piecearray["creation_date"]=(string)$so->creation_date;
 	$attributes=array();
 	foreach((array)$so->attributes as $attribute)
