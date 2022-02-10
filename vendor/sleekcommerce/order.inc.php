@@ -182,6 +182,16 @@ public static function SetOrderDetails($session="",$args=array())
   	return($result);
   }
 
+  /*
+     * Sets the order status
+     */
+     public static function SetDeliveryState($id_order=0,$status="")
+     {
+      $args=array("delivery_state"=>$status);
+     	$sr=new SleekShopRequest();
+     	$json=$sr->update_order_details($id_order,$args);
+     	return(true);
+     }
 
 }
 

@@ -61,6 +61,16 @@ class wemaloCtl
      return($res);
    }
 
+   public static function GetOrderStatus($id=0)
+      {
+        $endpoint="https://connect.wemalo.com/v1/goodsOrder/getStatus/".$id;
+        $method="GET";
+        $final_args=array();
+        $res=self::sendReq($endpoint,$method,WEMALO_TOKEN,$final_args);
+        sleep(1);
+        $res=json_decode($res);
+        return($res);
+      }
 
   private static function CreateCartProducts($cart=array())
    {
@@ -84,7 +94,7 @@ class wemaloCtl
     // Create a new cURL resource
     $ch = curl_init($endpoint);
     $payload = json_encode($args);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    if($method=="POST") curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
     // Set the content type to application/json and add Authorization token
     $token='Authorization:JWT ' . $token;
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json',$token));

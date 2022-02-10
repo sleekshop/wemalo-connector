@@ -14,6 +14,7 @@ foreach($files as $file) {
      $id=$id->id;
      $constraint=array("main.id_order"=>$id);
      $res=orderCtl::SearchOrders($constraint,0,0);
+     sleep(1);
      $res=array_shift($res);
      if($res["order_payment_state"]=="PAYMENT_RECEIVED")
       {
@@ -27,6 +28,23 @@ foreach($files as $file) {
            unlink("./newOrders/".$file);
          }
       }
+   }
+}
+$files = scandir('./transferredOrders');
+foreach($files as $file) {
+  if($file != "." AND $file != ".." AND $file != ".gitignore")
+   {
+     $id=file_get_contents("./transferredOrders/".$file);
+     $id=json_decode($id);
+     $id=$id->id;
+     $res=wemaloCtl::GetOrderStatus($id);
+     $status=$res->statusName;
+     if($status=="SHIPPED")
+     {
+       OrderCtl::SetDeliveryState($id,"CLOSED");
+       copy("./transferredOrders/".$file, "./shippedOrders/".$file);
+       unlink("./transferredOrders/".$file);
+     }
    }
 }
 $log=date("Y-m-d H-i-s")." - cron: get new orders, added ".$i." new orders." . $error ."\n";
