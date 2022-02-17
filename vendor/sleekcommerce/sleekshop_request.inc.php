@@ -615,16 +615,17 @@ private $post_data=array();
     /*
       * This function is for updating the order_details
       */
-     public function update_order_details($id_order=0,$args=array())
-     {
-      $post_data=$this->post_data;
-      $post_data["request"]="update_order_details";
-      foreach($args as $key=>$value)
-      {
-       $post_data[$key]=$value;
-      }
-      return $this->snd_request($this->server,$post_data);
-     }
+      public function update_order_details($id_order=0,$args=array())
+        {
+         $post_data=$this->post_data;
+         $post_data["request"]="update_order_details";
+         $post_data["id_order"]=$id_order;
+         foreach($args as $key=>$value)
+         {
+          $post_data[$key]=$value;
+         }
+         return $this->snd_request($this->server,$post_data);
+        }
 
 
  /*

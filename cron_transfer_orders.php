@@ -45,6 +45,10 @@ foreach($files as $file) {
        copy("./transferredOrders/".$file, "./shippedOrders/".$file);
        unlink("./transferredOrders/".$file);
      }
+     if($status=="CANCELLED")
+     {
+       unlink("./transferredOrders/".$file);
+     }
    }
 }
 $log=date("Y-m-d H-i-s")." - cron: get new orders, added ".$i." new orders." . $error ."\n";

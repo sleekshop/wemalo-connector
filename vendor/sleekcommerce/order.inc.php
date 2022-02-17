@@ -187,7 +187,7 @@ public static function SetOrderDetails($session="",$args=array())
      */
      public static function SetDeliveryState($id_order=0,$status="")
      {
-      $args=array("delivery_state"=>$status);
+      $args=array("order_delivery_state"=>$status);
      	$sr=new SleekShopRequest();
      	$json=$sr->update_order_details($id_order,$args);
      	return(true);
