@@ -13,7 +13,7 @@ foreach($files as $file) {
      $id=json_decode($id);
      $id=$id->id;
      $constraint=array("main.id_order"=>$id);
-     $res=orderCtl::SearchOrders($constraint,0,0);
+     if(!$res=orderCtl::SearchOrders($constraint,0,0)) unlink("./newOrders/".$file);
      sleep(1);
      $res=array_shift($res);
      if($res["order_payment_state"]=="PAYMENT_RECEIVED")
@@ -28,6 +28,7 @@ foreach($files as $file) {
            unlink("./newOrders/".$file);
          }
       }
+      if($res["order_state"]=="CANCELED") unlink("./newOrders/".$file);
    }
 }
 $files = scandir('./transferredOrders');

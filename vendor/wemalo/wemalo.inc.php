@@ -16,6 +16,7 @@ class wemaloCtl
      $args=array();
      $meta=array("externalId"=>$order["id"],"orderNumber"=>$order["order_number"]);
      $receiver=array(array("name1"=>$order["delivery_firstname"] . " " .$order["delivery_lastname"],
+     "name2"=>$order["delivery_companyname"],
      "street"=>$order["delivery_street"],"streetNumber"=>$order["delivery_number"],
      "countryCode2Letter"=>"DE","city"=>$order["delivery_city"],"zip"=>$order["delivery_zip"],"email"=>$order["email"]));
      $args["meta"]=$meta;
